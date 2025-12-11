@@ -2,27 +2,21 @@ import os
 import glob
 from typing import List
 import chromadb
-from chromadb.utils import embedding_functions
-import google.generativeai as genai
+from sentence_transformers import SentenceTransformer
 from pypdf import PdfReader
 from .config import CHROMA_DB_DIR, COLLECTION_NAME, EMBEDDING_MODEL
 
-class GeminiEmbeddingFunction(chromadb.EmbeddingFunction):
+class LocalEmbeddingFunction(chromadb.EmbeddingFunction):
+    def __init__(self):
+        self.model = SentenceTransformer(EMBEDDING_MODEL)
+    
     def __call__(self, input: chromadb.Documents) -> chromadb.Embeddings:
-        model = EMBEDDING_MODEL
-        title = "Interview Prep Document"
-        return [
-            genai.embed_content(model=model,
-                                content=text,
-                                task_type="retrieval_document",
-                                title=title)["embedding"]
-            for text in input
-        ]
+        return self.model.encode(input).tolist()
 
 class FileIngestor:
     def __init__(self):
         self.client = chromadb.PersistentClient(path=CHROMA_DB_DIR)
-        self.embedding_fn = GeminiEmbeddingFunction()
+        self.embedding_fn = LocalEmbeddingFunction()
         self.collection = self.client.get_or_create_collection(
             name=COLLECTION_NAME,
             embedding_function=self.embedding_fn
