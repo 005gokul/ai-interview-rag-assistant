@@ -1,0 +1,41 @@
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local env
+.env
+*.env
+
+# Logs
+*.log
+backend_error.log
+
+# User data / embeddings (keep out of git)
+backend/data/*
+!backend/data/.gitkeep
+backend/analytics/*.jsonl
+backend/analytics/*.csv
+backend/analytics/*.log
+backend/analytics/*.txt
+backend/analytics/__pycache__/
+backend/analytics/.ipynb_checkpoints/
+backend/analytics/records.jsonl
+!backend/analytics/.gitkeep
+
+# SQLite / vector stores
+*.sqlite3
+backend/data/chroma_db/
+
+# Node build artifacts
+frontend/node_modules/
+frontend/dist/
+
+
+
